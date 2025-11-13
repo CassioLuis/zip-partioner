@@ -73,6 +73,10 @@ fn main() -> Result<()> {
 
     pb.finish_and_clear();
     println!("Concluído com sucesso!");
+    // Aguarda o usuário pressionar Enter antes de sair
+    println!("\nPressione ENTER para fechar...");
+    let mut dummy = String::new();
+    std::io::stdin().read_line(&mut dummy).ok();
     Ok(())
 }
 
@@ -94,10 +98,14 @@ fn extract_all_xmls_from_zip<R: Read + std::io::Seek>(reader: R) -> Result<Vec<X
         file.read_to_end(&mut buf)?;
 
         // Se for ZIP dentro do ZIP → processa recursivamente
-        if name.ends_with(".zip") {
+        if name.to_lowercase().ends_with(".zip") {
+            // Cria um cursor em memória para o zip interno
             let cursor = Cursor::new(buf);
-            let inner_xmls = extract_all_xmls_from_zip(cursor)?;
-            xmls.extend(inner_xmls);
+            // Chamada recursiva profunda
+            match extract_all_xmls_from_zip(cursor) {
+                Ok(mut inner_xmls) => xmls.append(&mut inner_xmls),
+                Err(e) => eprintln!("Aviso: falha ao ler ZIP interno '{}': {}", name, e),
+            }
         } else if name.to_lowercase().ends_with(".xml") {
             xmls.push(XmlFile { name, data: buf });
         }
