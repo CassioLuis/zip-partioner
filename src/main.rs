@@ -72,7 +72,7 @@ fn main() -> Result<()> {
     }
 
     pb.finish_and_clear();
-    println!("Concluído com sucesso!");
+    println!("\n\x1b[1;92m🎉 Concluído com sucesso!\x1b[0m");
     // Aguarda o usuário pressionar Enter antes de sair
     println!("\nPressione ENTER para fechar...");
     let mut dummy = String::new();
