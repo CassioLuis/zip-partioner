@@ -9,7 +9,7 @@ rfd = "0.14"
 anyhow = "1"
 thiserror = "1"
 indicatif = "0.17"
-rayon = "1.8"
+rayon = "1.10"
 
 [build-dependencies]
 winres = "0.1"
